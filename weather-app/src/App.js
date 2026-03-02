@@ -1,23 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import SearchBar from "./components/SearchBar";
+import WeatherCard from "./components/WeatherCard";
+import FavoritesList from "./components/FavoritesList";
 
 function App() {
+  const [city, setCity] = useState("");
+  const [weatherData, setWeatherData] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+
+  // Sample static weather
+  const sampleWeather = {
+    city: "London",
+    temp: 15,
+    weather: "Cloudy",
+  };
+
+  const handleSearch = () => {
+    if (city.trim() !== "") {
+      setWeatherData({ ...sampleWeather, city: city });
+    }
+  };
+
+  const addFavorite = () => {
+    if (weatherData && !favorites.includes(weatherData.city)) {
+      setFavorites([...favorites, weatherData.city]);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ maxWidth: "500px", margin: "auto", textAlign: "center" }}>
+      <h1>Weather App</h1>
+      <SearchBar city={city} setCity={setCity} handleSearch={handleSearch} />
+      {weatherData && (
+        <WeatherCard weather={weatherData} addFavorite={addFavorite} />
+      )}
+      <FavoritesList favorites={favorites} />
     </div>
   );
 }
